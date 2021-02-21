@@ -6,13 +6,6 @@ import pandas
 import collections
 
 
-env = Environment(
-        loader=FileSystemLoader('.'),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
-template = env.get_template('template.html')
-
-
 def get_year_string():
     years_with_you = datetime.datetime.now().year - 1920
     remainder = years_with_you % 10
@@ -50,14 +43,17 @@ def get_assortment():
     return assortment
 
 
-rendered_page = template.render(
-    years_with_you=get_year_string(),
-    assortment=get_assortment()
-)
-
 if __name__ == '__main__':
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
+    template = env.get_template('template.html')
+    rendered_page = template.render(
+        years_with_you=get_year_string(),
+        assortment=get_assortment()
+    )
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
-
